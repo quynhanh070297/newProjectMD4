@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService
     private JWTProvider jwtProvider;
 
     @Override
-    public boolean registerOrUpdate(FormRegister formRegister, Long id) {
+    public boolean registerOrUpdate(FormRegister formRegister, Boolean isTheUpdate) {
         // Chuyển đổi FormRegister thành User để lưu vào cơ sở dữ liệu
         User user = User.builder()
                 .username(formRegister.getUsername())
@@ -67,8 +67,10 @@ public class UserServiceImpl implements UserService
                 .status(true)
                 .build();
 
-        if (id != null) {
-            user.setId(id);
+        if (isTheUpdate ) {
+            CustomUserDetail userDetails = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            User UpdateUser =getUserByUserName(userDetails.getUsername());
+            user.setId(UpdateUser.getId());
         }
 
         // Thêm vai trò cho người dùng
@@ -143,15 +145,17 @@ public class UserServiceImpl implements UserService
 
     @Override
     public Page<User> getUsers(int page) {
-        int size = 3;
+        int size = 1;
         Sort sort = Sort.by(Sort.Direction.ASC, "createdAt");
         Pageable pageable = PageRequest.of(page, size, sort);
         return userRepository.findAll(pageable);
     }
 
+
     @Override
     public User changePass(String oldPass, String newPass, String confirmPass) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        CustomUserDetail userDetails = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = getUserByUserName(userDetails.getUsername());
         if (!passwordEncoder.matches(oldPass, user.getPassword())) {
             throw new RuntimeException("Mật khẩu hiện tại không chính xác");
         }

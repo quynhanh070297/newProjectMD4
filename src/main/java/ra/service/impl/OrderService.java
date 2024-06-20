@@ -43,7 +43,9 @@ public class OrderService {
         try {
             Order order = orderRepository.findById(orderId).orElseThrow(() -> new Exception("Order not found"));
             Order.OrderStatus status = Order.OrderStatus.valueOf(statusString);
-            order.setStatus(status);
+            order.setStatus(status)
+            ;
+            orderRepository.save(order);
             return true;
         } catch (Exception e) {
             throw new Exception("Status is not exits");
@@ -148,6 +150,9 @@ public class OrderService {
                 .build();
     }
 
+    public List<Order> fillAllOrder(){
+        return orderRepository.findAll();
+    }
 
 }
 

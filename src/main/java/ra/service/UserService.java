@@ -11,7 +11,7 @@ import ra.security.principals.CustomUserDetail;
 import java.util.List;
 
 public interface UserService {
-    boolean registerOrUpdate(FormRegister formRegister, Long id);
+    boolean registerOrUpdate(FormRegister formRegister, Boolean isTheUpdate);
     JWTResponse login(FormLogin formLogin);
     List<User> getAllUsers();
     User getUserById(Integer id) throws Exception;

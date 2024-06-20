@@ -37,7 +37,7 @@ public class AddressService {
         return true;
     }
 
-    public Address add(AddressRegister addressRegister)   {
+    public List<Address> add(AddressRegister addressRegister)   {
         CustomUserDetail userDetails = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.getUserByUserName(userDetails.getUsername());
         Address address = Address.builder()
@@ -47,7 +47,8 @@ public class AddressService {
                 .phone(addressRegister.getPhone())
                 .user(user)
                 .build();
-        return addressRepository.save(address);
+        addressRepository.save(address);
+        return addressRepository.findByUser(user);
     }
 
 

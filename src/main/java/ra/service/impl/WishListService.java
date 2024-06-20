@@ -25,7 +25,7 @@ public class WishListService {
     @Autowired
     ProductRepository productRepository;
 
-    public Boolean AddOrDeleteToWishList(Long productId) throws Exception
+    public String AddOrDeleteToWishList(Long productId) throws Exception
     {
         CustomUserDetail userDetails = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.getUserByUserName(userDetails.getUsername());
@@ -33,14 +33,16 @@ public class WishListService {
         Optional<WishList> wishList = wishListRepository.findByUserAndProduct(user, product);
         if (wishList.isPresent()) {
             wishListRepository.delete(wishList.get());
+            return "Successfully deleted";
         } else {
             wishListRepository.save(WishList.builder()
                     .wishListId(null)
                     .product(productRepository.findById(productId).orElseThrow(() -> new Exception("san phan khong ton tai")))
                     .user(user)
                     .build());
+            return "Successfully added";
         }
-        return true;
+
     }
 
     public List<WishList> getWishLists()  {

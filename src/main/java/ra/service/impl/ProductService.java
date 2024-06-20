@@ -19,6 +19,11 @@ import java.util.List;
 @Service
 public class ProductService {
 
+
+
+
+
+
     @Autowired
     private ProductRepository productRepository;
     @Autowired
@@ -50,17 +55,17 @@ public class ProductService {
             return products;
         }
     }
-
-        public List<Product> findByProductNameOrDescription(String name,String description) throws Exception {
-        List<Product> products= productRepository.findProductByProductNameOrDescription(name, description);
+    public List<Product> findByProductNameOrDescription(String name,String description) throws Exception {
+        List<Product> products= productRepository.findProductByProductNameContainingOrDescriptionContaining(name, description);
         if (products.isEmpty()){
-            throw new Exception("Product is not exits");
+            throw new RuntimeException("Product is not exits");
         }else {
             return products;
         }
     }
     public Product savePro(ProductRequest productRequest, Long id) throws Exception {
         Product product = Product.builder()
+                .description(productRequest.getDescription())
                 .productId(id)
                 .stockQuantity(productRequest.getStockQuantity())
                 .sku(productRequest.getSku())

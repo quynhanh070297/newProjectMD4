@@ -11,12 +11,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AddressRegister {
-    @NotBlank(message = "khong dc de trong")
+    @NotBlank(message = "Is not null")
     private String fullAddress;
 
-    @NotBlank(message = "khong dc de trong")
+    @NotBlank(message = "Is not null")
     private String phone;
 
-    @NotBlank(message = "khong dc de trong")
+    @NotBlank(message = "Is not null")
     private String receiveName;
 }

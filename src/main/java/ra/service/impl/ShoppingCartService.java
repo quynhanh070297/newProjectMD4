@@ -42,7 +42,11 @@ ShoppingCart shoppingCart =  shoppingCartRepository.findShoppingCartByProductAnd
     public List<ShoppingCart> getAllShoppingCart() throws Exception {
         CustomUserDetail userDetails = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user=userService.getUserByUserName(userDetails.getUsername());
-       return shoppingCartRepository.findAllByUser(user);
+        List<ShoppingCart> shoppingCarts = shoppingCartRepository.findAllByUser(user);
+        if (shoppingCarts.isEmpty()) {
+            throw new Exception("No shopping cart found");
+        }
+       return shoppingCarts;
     }
     public Boolean deleteShoppingCart() throws Exception {
         shoppingCartRepository.deleteAll(getAllShoppingCart());
